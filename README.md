@@ -1,1 +1,1 @@
-# odin-tictactoe
+TheOdinProject Tic Tac Toe
