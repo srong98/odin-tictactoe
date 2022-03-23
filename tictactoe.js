@@ -30,26 +30,28 @@ const player = (XO) => {
 }
 
 const gameControls = (() => {
-    const _Player1 = player('X');
-    const _Player2 = player('O');
+    const _player1 = player('X');
+    const _player2 = player('O');
 
-    var roundOdd = true;
+    var _roundOdd = true;
+    var _roundNumber = 1;
     const _round = () => {
-        roundOdd = !roundOdd;
+        _roundOdd = !_roundOdd;
+        _roundNumber++;
     }
     
     const playTurn = (index) => {
-        if (gameboard.getBoard(index) == '') {
-            if (roundOdd == true) {
-                gameboard.setBoard(index, _Player1.getXO());
+        if (gameboard.getBoard(index) == '' && winStatus == false) {
+            if (_roundOdd == true) {
+                gameboard.setBoard(index, _player1.getXO());
             }
-            if (roundOdd == false) {
-                gameboard.setBoard(index, _Player2.getXO());
+            if (_roundOdd == false) {
+                gameboard.setBoard(index, _player2.getXO());
             }
             _round();
+            checkWin();
         }
     }
-/* Unfinished
 
     const winConditionIndex = [
         [0, 1, 2],
@@ -65,13 +67,15 @@ const gameControls = (() => {
     var winStatus = false;
     const checkWin = () => {
         for (let i = 0; i < winConditionIndex.length; i++) {
-            var one = gameboard.getBoard[(winConditionIndex[i])[0]]
-            var two = gameboard.getBoard[(winConditionIndex[i])[1]]
-            var three = gameboard.getBoard[(winConditionIndex[i])[3]]
-            if (one === two && two === three && one === three) 
-                return winStatus = true;
+            var one = gameboard.getBoard((winConditionIndex[i])[0]);
+            var two = gameboard.getBoard((winConditionIndex[i])[1]);
+            var three = gameboard.getBoard((winConditionIndex[i])[2]);
+
+            if (one == two && two == three && one != '' && two != '' && three != '') {
+                winStatus = true;
+            }
         }
-    }*/
+    }
 
     return {
         playTurn,
@@ -79,12 +83,14 @@ const gameControls = (() => {
 })();
 
 const display = (() => {
-    const boardSpots = document.querySelectorAll('.boardspot')
-    boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
+    const _boardSpots = document.querySelectorAll('.boardspot')
+    _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
         gameControls.playTurn(e.target.getAttribute('data-index'));
         e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
     }));
 
+
+    const _boardContainer = document.getElementById('board');
     return {
 
     }
