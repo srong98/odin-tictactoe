@@ -53,6 +53,9 @@ const gameControls = (() => {
     }
     
     const resetGame = () => {
+        _winner = '';
+        _roundOdd = true;
+        _roundNumber = 0;
         for (let i = 0; i < 9; i++) {
             gameboard.setBoard(i, '');
         }
@@ -82,7 +85,6 @@ const gameControls = (() => {
         [6, 7, 8],
     ]
     const _checkWin = () => {
-        
         for (let i = 0; i < _winConditionIndex.length; i++) {
             var one = gameboard.getBoard((_winConditionIndex[i])[0]);
             var two = gameboard.getBoard((_winConditionIndex[i])[1]);
