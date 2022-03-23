@@ -11,6 +11,7 @@ html {
 body {
     background: linear-gradient(rgb(30, 30, 30), black);
 }
+#result,
 .container,
 .player-choice,
 .boardspot {
@@ -59,6 +60,19 @@ header h1 {
 .no-bottom {
     border-bottom: 0px;
 }
+#result {
+    position: absolute;
+    font-family: LPixel, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 40px;
+    height: 30vh;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-in-out;
+}
+#result.seen {
+    opacity: 1;
+    visibility: visible;
+}
 @font-face {
     font-family: Shadded;
     src: url(./resources/shadded-south/Shadded\ South\ Personal\ Use.ttf);
@@ -67,4 +81,8 @@ header h1 {
 @font-face {
     font-family: Remachine;
     src: url(./resources/remachine-script/RemachineScript_Personal_Use.ttf);
+}
+@font-face {
+    font-family: LPixel;
+    src: url(./resources/light-pixel-7/light_pixel-7.ttf);
 }
