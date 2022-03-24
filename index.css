@@ -5,6 +5,9 @@
     box-sizing: border-box;
     color: white;
 }
+:root {
+    --gold: rgb(252, 196, 12);
+}
 html {
     height: 100%;
 }
@@ -43,7 +46,7 @@ header h1 {
     margin-top: 150px;
 }
 .boardspot {
-    border: 2px solid rgb(252, 196, 12);
+    border: 2px solid var(--gold);
     justify-content: center;
     font-family: Remachine, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 80px;
@@ -72,6 +75,16 @@ header h1 {
 #result.seen {
     opacity: 1;
     visibility: visible;
+}
+#replay:hover {
+    cursor: pointer;
+    animation: gold-enlarge cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards;
+}
+@keyframes gold-enlarge {
+    100% {
+        color:var(--gold);
+        transform: scale(1.1);
+    }
 }
 @font-face {
     font-family: Shadded;

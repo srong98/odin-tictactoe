@@ -54,6 +54,7 @@ const gameControls = (() => {
     
     const resetGame = () => {
         _winner = '';
+        _winStatus = false;
         _roundOdd = true;
         _roundNumber = 0;
         for (let i = 0; i < 9; i++) {
@@ -64,10 +65,10 @@ const gameControls = (() => {
     var _winner;
     const getWinner = () => {
         if (_roundOdd == true) {
-            _winner = 'Player 2';
+            _winner = 'O';
         }
         if (_roundOdd == false) {
-            _winner = 'Player 1';
+            _winner = 'X';
         }
         return _winner;
     }
@@ -136,7 +137,7 @@ const display = (() => {
         const _resultContainer = document.getElementById('result');
         const _resultMessage = document.getElementById('result-message');
         const _replay = document.getElementById('replay');
-        _replay.addEventListener('click', resetDisplay);
+        _replay.addEventListener('click', _resetDisplay);
 
         if (gameControls.getWinStatus() == true || gameControls.getRound() == 9) {
             _boardContainer.setAttribute('style', 'opacity: 0.3; filter: blur(8px)');
@@ -150,7 +151,7 @@ const display = (() => {
             }
     }}
 
-    const resetDisplay = () => {
+    const _resetDisplay = () => {
         const _resultContainer = document.getElementById('result');
         const _boardContainer = document.getElementById('board');
 
@@ -160,6 +161,7 @@ const display = (() => {
 
         for (let i = 0; i < _boardSpots.length; i++) {
             _boardSpots[i].innerText = gameboard.getBoard(i);
+            _boardSpots[i].setAttribute('style', 'color: white');
         }
     }
 
