@@ -7,26 +7,106 @@
 }
 :root {
     --gold: rgb(252, 196, 12);
+    --backround-black: linear-gradient(rgb(30, 30, 30), black);
+    --reverse-black: linear-gradient(black, rgb(30, 30, 30));
+    --red: linear-gradient(rgb(155, 38, 38), rgb(95, 23, 23));
+    --reverse-red: linear-gradient(rgb(95, 23, 23), rgb(155, 38, 38));
+    --green: linear-gradient(rgb(8, 151, 44),rgb(0, 68, 15));
+    --reverse-green: linear-gradient(rgb(0, 68, 15), rgb(8, 151, 44));
 }
 html {
     height: 100%;
 }
 body {
-    background: linear-gradient(rgb(30, 30, 30), black);
+    background: var(--backround-black);
 }
-#result,
+label {
+    font-family: Byte256, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 40px;
+    color: white;
+}
+input[type="text"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 50px;
+    width: min(150px, 70%);
+    border-radius: 50px;
+    color: white;
+    background: var(--backround-black);
+    border: white 2px solid;
+    font-size: 25px;
+    padding-bottom: 5px;
+    font-family: Exo2, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+input[type="text"]:focus {
+    outline: white 2px solid;
+    border: none;
+}
 .container,
-.player-choice,
-.boardspot {
+.boardspot,
+#result,
+#player-choice,
+#player1,
+#player2 {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-around;
     align-items: center;
 }
-.player-choice {
-    flex-flow: row nowrap;
+#player-choice {
+    flex-flow: row nowrap;    
+    justify-content: center;
     height: 75vh;
     width: 100vw;
+    column-gap: 50px;
+}
+#player1,
+#player2 {
+    border: 5px double var(--gold);
+    border-radius: 50px;
+    height: 50vh;
+    width: max(200px, 15vw);
+    justify-content: center;
+    row-gap: 20px;
+}
+#start,
+.ready-button {
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: 20px;
+    font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 12px 18px;
+    border-radius: 30px;    
+    border: 2px white solid;
+}
+.ready-button {
+    justify-self: flex-end;
+    width: 150px;
+    position: relative;
+    top: 35px;
+}
+.ready-button.not-ready {
+    background: var(--red);
+}
+.ready-button.ready {
+    background: var(--green);
+}
+#start,
+.ready-button:hover {
+    cursor: pointer;
+}
+#start {
+    width: 120px;
+    background: var(--backround-black)
+}
+#start:active {
+    background: var(--reverse-black);
+}
+.ready-button.not-ready:active {
+    background: var(--reverse-red);
+}
+.ready-button.ready:active {
+    background: var(--reverse-green);
 }
 header h1 {
     font-family: Shadded, 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -34,8 +114,8 @@ header h1 {
     margin-top: 50px;
 }
 .hidden {
+    opacity: 0;
     visibility: hidden;
-    display: none;
 }
 #board {
     position: absolute;
@@ -43,13 +123,21 @@ header h1 {
     grid-template: repeat(3, 150px) / repeat(3, 150px);
     margin-right: auto;
     margin-left: auto;
-    margin-top: 150px;
+    margin-top: 50px;
+    transition: opacity 1s ease-in-out;
 }
 .boardspot {
     border: 2px solid var(--gold);
     justify-content: center;
     font-family: Remachine, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 80px;
+}
+#vs {
+    font-size: 50px;
+    position: relative;
+    bottom: 30px;
+    font-family: Byte256, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    transition: opacity 1s ease-in-out;
 }
 .no-top {
     border-top: 0px;
@@ -90,7 +178,6 @@ header h1 {
     font-family: Shadded;
     src: url(./resources/shadded-south/Shadded\ South\ Personal\ Use.ttf);
 }
-
 @font-face {
     font-family: Remachine;
     src: url(./resources/remachine-script/RemachineScript_Personal_Use.ttf);
@@ -98,4 +185,12 @@ header h1 {
 @font-face {
     font-family: LPixel;
     src: url(./resources/light-pixel-7/light_pixel-7.ttf);
+}
+@font-face {
+    font-family: Byte256;
+    src: url(./resources/256-bytes/256BYTES.TTF);
+}
+@font-face {
+    font-family: Exo2;
+    src: url(./resources/exo-2/Exo2-ExtraLightItalic.ttf);
 }

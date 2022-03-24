@@ -16,18 +16,103 @@ const gameboard = (() => {
     }
 })();
 
-const player = (XO) => {
+const playerStart = (() => {
+    const _playerInput1 = document.getElementById('p1name');
+    const _playerLabel1 = document.getElementById('p1label');
+
+    var _playerOneName = 'Player 1';
+    _playerInput1.addEventListener('change', (e) => {
+            _playerLabel1.innerText = e.target.value;
+            _playerOneName = e.target.value;
+            if (e.target.value == '') {
+                _playerLabel1.innerText = 'Player 1'; 
+                _playerOneName = 'Player 1';
+            }
+        });
+    const getPlayerOneName = () => {
+        return _playerOneName;
+    }
+
+    const _playerInput2 = document.getElementById('p2name');
+    const _playerLabel2 = document.getElementById('p2label');
+
+    var _playerTwoName = 'Player 2';
+    _playerInput2.addEventListener('change', (e) => {
+            _playerLabel2.innerText = e.target.value;
+            _playerTwoName = e.target.value;
+            if (e.target.value == '') {
+                _playerLabel2.innerText = 'Player 2'; 
+                _playerOneName = 'Player 2';
+            }
+        });
+    const getPlayerTwoName = () => {
+        return _playerTwoName;
+    }
+
+    const _playerReadyOne = document.getElementById('p1ready'); 
+    var _playerReady1 = false;
+
+    _playerReadyOne.addEventListener('click', (e) => {
+        _playerReady1 = !_playerReady1;
+        if (_playerReady1 == false) {
+            _playerReadyOne.classList.remove('ready');
+            _playerReadyOne.classList.add('not-ready');
+            _playerReadyOne.innerText = 'Not Ready';
+        }
+        if (_playerReady1 == true) {
+            _playerReadyOne.classList.add('ready');
+            _playerReadyOne.classList.remove('not-ready');
+            _playerReadyOne.innerText = 'Ready';
+        }
+    })
+    const getPlayerOneReady = () => {
+        return _playerReady1;
+    }
+
+    const _playerReadyTwo = document.getElementById('p2ready'); 
+    var _playerReady2 = false;
+
+    _playerReadyTwo.addEventListener('click', (e) => {
+        _playerReady2 = !_playerReady2;
+        if (_playerReady2 == false) {
+            _playerReadyTwo.classList.remove('ready');
+            _playerReadyTwo.classList.add('not-ready');
+            _playerReadyTwo.innerText = 'Not Ready';
+        }
+        if (_playerReady2 == true) {
+            _playerReadyTwo.classList.add('ready');
+            _playerReadyTwo.classList.remove('not-ready');
+            _playerReadyTwo.innerText = 'Ready';
+        }
+    })
+    const getPlayerTwoReady = () => {
+        return _playerReady2;
+    }
+
+    return {
+        getPlayerOneName,
+        getPlayerTwoName,
+        getPlayerOneReady,
+        getPlayerTwoReady,
+    }
+})();
+
+const player = (XO, name) => {
     const getXO = () => {
         return XO;
     }
+    const getName = () => {
+        return name;
+    }
     return {
         getXO,
+        getName,
     }
 }
 
 const gameControls = (() => {
-    const _player1 = player('X');
-    const _player2 = player('O');
+    const _player1 = player('X', playerStart.getPlayerOneName());
+    const _player2 = player('O', playerStart.getPlayerTwoName());
 
     var _roundOdd = true;
     var _roundNumber = 0;
@@ -65,10 +150,10 @@ const gameControls = (() => {
     var _winner;
     const getWinner = () => {
         if (_roundOdd == true) {
-            _winner = 'O';
+            _winner = _player2.getName();
         }
         if (_roundOdd == false) {
-            _winner = 'X';
+            _winner = _player1.getName();
         }
         return _winner;
     }
@@ -117,6 +202,8 @@ const gameControls = (() => {
 
 const display = (() => {
     const _boardSpots = document.querySelectorAll('.boardspot');
+    const _boardContainer = document.getElementById('board');
+    const _resultContainer = document.getElementById('result');
     
     _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
         gameControls.playTurn(e.target.getAttribute('data-index'));
@@ -133,8 +220,6 @@ const display = (() => {
     }}
 
     const _endGameDisplay = () => { 
-        const _boardContainer = document.getElementById('board');
-        const _resultContainer = document.getElementById('result');
         const _resultMessage = document.getElementById('result-message');
         const _replay = document.getElementById('replay');
         _replay.addEventListener('click', _resetDisplay);
@@ -152,9 +237,6 @@ const display = (() => {
     }}
 
     const _resetDisplay = () => {
-        const _resultContainer = document.getElementById('result');
-        const _boardContainer = document.getElementById('board');
-
         gameControls.resetGame();
         _resultContainer.classList.remove('seen');
         _boardContainer.setAttribute('style', 'opacity: initial; filter: initial');
@@ -163,7 +245,22 @@ const display = (() => {
             _boardSpots[i].innerText = gameboard.getBoard(i);
             _boardSpots[i].setAttribute('style', 'color: white');
         }
+    } 
+    
+    const _startGame = () => {
+        const _vs = document.getElementById('vs')
+        const _choiceContainer = document.getElementById('player-choice')
+        if (playerStart.getPlayerOneReady() === true && playerStart.getPlayerTwoReady() === true) {
+            _boardContainer.classList.remove('hidden');
+            _vs.classList.remove('hidden');
+            _choiceContainer.classList.add('hidden');
+            _vs.innerText = `${playerStart.getPlayerOneName()} (X) vs. ${playerStart.getPlayerTwoName()} (O)`;
+        }
     }
+    
+    const _startButton = document.getElementById('start');
+    _startButton.addEventListener('click', _startGame)
+
 
     return {
 

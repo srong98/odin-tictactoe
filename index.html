@@ -11,21 +11,21 @@
 <body>
     <div class="container">
         <header><h1>Tic-Tac-Toe</h1></header>
-        <div class="player-choice">
-            <div id="player1" class="hidden">
-                Player 1
+        <div id="player-choice">
+            <div id="player1">
+                <label for="p1name" id="p1label">Player 1</label>
+                <input type="text" id="p1name" maxlength="11" placeholder="name">
+                <button id="p1ready" class="not-ready ready-button">Not Ready</button>
             </div>
-            <div id="player-or-computer" class="hidden">
-                Player 2
-            </div>
-            <div id="player2" class="hidden">
-                Player 2
-            </div>
-            <div id="computer" class="hidden"> 
-                Test
+            <button id="start">Start</button>
+            <div id="player2">
+                <label for="p2name" id="p2label">Player 2</label>
+                <input type="text" id="p2name" maxlength="11" placeholder="name">
+                <button id="p2ready" class="not-ready ready-button">Not Ready</button>
             </div>
         </div>
-        <div id="board">
+        <div id="vs" class="hidden"></div>
+        <div id="board" class="hidden">
             <div class="boardspot no-top no-left" data-index="0"></div>
             <div class="boardspot no-top" data-index="1"></div>
             <div class="boardspot no-top no-right" data-index="2"></div>
