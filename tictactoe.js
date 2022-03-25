@@ -16,99 +16,71 @@ const gameboard = (() => {
     }
 })();
 
-const playerStart = (() => {
-    const _playerInput1 = document.getElementById('p1name');
-    const _playerLabel1 = document.getElementById('p1label');
-
-    var _playerOneName = 'Player 1';
-    _playerInput1.addEventListener('change', (e) => {
-            _playerLabel1.innerText = e.target.value;
-            _playerOneName = e.target.value;
-            if (e.target.value == '') {
-                _playerLabel1.innerText = 'Player 1'; 
-                _playerOneName = 'Player 1';
-            }
-        });
-    const getPlayerOneName = () => {
-        return _playerOneName;
-    }
-
-    const _playerInput2 = document.getElementById('p2name');
-    const _playerLabel2 = document.getElementById('p2label');
-
-    var _playerTwoName = 'Player 2';
-    _playerInput2.addEventListener('change', (e) => {
-            _playerLabel2.innerText = e.target.value;
-            _playerTwoName = e.target.value;
-            if (e.target.value == '') {
-                _playerLabel2.innerText = 'Player 2'; 
-                _playerOneName = 'Player 2';
-            }
-        });
-    const getPlayerTwoName = () => {
-        return _playerTwoName;
-    }
-
-    const _playerReadyOne = document.getElementById('p1ready'); 
-    var _playerReady1 = false;
-
-    _playerReadyOne.addEventListener('click', (e) => {
-        _playerReady1 = !_playerReady1;
-        if (_playerReady1 == false) {
-            _playerReadyOne.classList.remove('ready');
-            _playerReadyOne.classList.add('not-ready');
-            _playerReadyOne.innerText = 'Not Ready';
-        }
-        if (_playerReady1 == true) {
-            _playerReadyOne.classList.add('ready');
-            _playerReadyOne.classList.remove('not-ready');
-            _playerReadyOne.innerText = 'Ready';
-        }
-    })
-    const getPlayerOneReady = () => {
-        return _playerReady1;
-    }
-
-    const _playerReadyTwo = document.getElementById('p2ready'); 
-    var _playerReady2 = false;
-
-    _playerReadyTwo.addEventListener('click', (e) => {
-        _playerReady2 = !_playerReady2;
-        if (_playerReady2 == false) {
-            _playerReadyTwo.classList.remove('ready');
-            _playerReadyTwo.classList.add('not-ready');
-            _playerReadyTwo.innerText = 'Not Ready';
-        }
-        if (_playerReady2 == true) {
-            _playerReadyTwo.classList.add('ready');
-            _playerReadyTwo.classList.remove('not-ready');
-            _playerReadyTwo.innerText = 'Ready';
-        }
-    })
-    const getPlayerTwoReady = () => {
-        return _playerReady2;
-    }
-
-    return {
-        getPlayerOneName,
-        getPlayerTwoName,
-        getPlayerOneReady,
-        getPlayerTwoReady,
-    }
-})();
-
-const player = (XO, name) => {
+const player = (XO, number) => {
     const getXO = () => {
         return XO;
     }
+
+    const _playerInput = document.getElementById(`p${number}name`);
+    const _playerLabel = document.getElementById(`p${number}label`)
+
+    var _playerName = `Player ${number}`;
+    _playerInput.addEventListener('change', (e) => {
+            _playerLabel.innerText = e.target.value;
+            _playerName = e.target.value;
+            if (e.target.value == '') {
+                _playerLabel.innerText = `Player ${number}`; 
+                _playerName = `Player ${number}`;
+            }
+        });
+    const getPlayerName = () => {
+        return _playerName;
+    }
+
+    const _playerReady = document.getElementById(`p${number}ready`);
+
+    var _playerIsReady = false;
+    _playerReady.addEventListener('click', (e) => {
+        _playerIsReady = !_playerIsReady;
+        if (_playerIsReady == false) {
+            _playerReady.classList.remove('ready');
+            _playerReady.classList.add('not-ready');
+            _playerReady.innerText = 'Not Ready';
+        }
+        if (_playerIsReady == true) {
+            _playerReady.classList.add('ready');
+            _playerReady.classList.remove('not-ready');
+            _playerReady.innerText = 'Ready';
+        }
+    })
+    const getPlayerReady = () => {
+        return _playerIsReady;
+    }
+
     return {
         getXO,
+        getPlayerName,
+        getPlayerReady,
     }
 }
 
 const gameControls = (() => {
-    const _player1 = player('X');
-    const _player2 = player('O');
+    const _player1 = player('X', 1);
+    const _player2 = player('O', 2);
+
+    const getPlayerOneName = () => {
+        return _player1.getPlayerName();
+    }
+    const getPlayerOneReady = () => {
+        return _player1.getPlayerReady();
+    }
+
+    const getPlayerTwoReady = () => {
+        return _player2.getPlayerReady();
+    }
+    const getPlayerTwoName = () => {
+        return _player2.getPlayerName();
+    }
 
     var _roundOdd = true;
     var _roundNumber = 0;
@@ -133,37 +105,39 @@ const gameControls = (() => {
         }
     }
 
-    var overallRound = false;
+    var _overallRound = false;
     const resetGame = () => {
-        overallRound = !overallRound;
-        _winner = '';
-        _winStatus = false;
-        _roundOdd = true;
-        _roundNumber = 0;
-        for (let i = 0; i < 9; i++) {
-            gameboard.setBoard(i, '');
+        if (_winStatus == true || _roundNumber == 9) {
+            _overallRound = !_overallRound;
+            _winner = '';
+            _winStatus = false;
+            _roundOdd = true;
+            _roundNumber = 0;
+            for (let i = 0; i < 9; i++) {
+                gameboard.setBoard(i, '');
+            }
         }
     }
     const getOverallRound = () => {
-        return overallRound;
+        return _overallRound;
     }
 
     var _winner;
     const _updateWinner = () => {
-        if (overallRound == false) {
+        if (_overallRound == false) {
             if (_roundOdd == true) {
-                _winner = playerStart.getPlayerTwoName();
+                _winner = _player2.getPlayerName();
             }
             if (_roundOdd == false) {
-                _winner = playerStart.getPlayerOneName();
+                _winner = _player1.getPlayerName();
             }
         }
-        if (overallRound == true) {
+        if (_overallRound == true) {
             if (_roundOdd == true) {
-                _winner = playerStart.getPlayerOneName();
+                _winner = _player1.getPlayerName();
             }
             if (_roundOdd == false) {
-                _winner = playerStart.getPlayerTwoName();
+                _winner = _player2.getPlayerName();
             }
         }
     }
@@ -211,6 +185,10 @@ const gameControls = (() => {
         getWinLine,
         getWinner,
         getOverallRound,
+        getPlayerOneName,
+        getPlayerOneReady,
+        getPlayerTwoName,
+        getPlayerTwoReady,
         resetGame,
     }
 })();
@@ -258,10 +236,10 @@ const display = (() => {
         _boardContainer.setAttribute('style', 'opacity: initial; filter: initial');
 
         if (gameControls.getOverallRound() == false) {
-            _vs.innerText = `${playerStart.getPlayerOneName()} (X) vs. ${playerStart.getPlayerTwoName()} (O)`
+            _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. ${gameControls.getPlayerTwoName()} (O)`
         }
         if (gameControls.getOverallRound() == true) {
-            _vs.innerText = `${playerStart.getPlayerTwoName()} (X) vs. ${playerStart.getPlayerOneName()} (O)`
+            _vs.innerText = `${gameControls.getPlayerTwoName()} (X) vs. ${gameControls.getPlayerOneName()} (O)`
         }
 
         for (let i = 0; i < _boardSpots.length; i++) {
@@ -272,11 +250,11 @@ const display = (() => {
     
     const _startGame = () => {
         const _choiceContainer = document.getElementById('player-choice')
-        if (playerStart.getPlayerOneReady() === true && playerStart.getPlayerTwoReady() === true) {
+        if (gameControls.getPlayerOneReady() === true && gameControls.getPlayerTwoReady() === true) {
             _boardContainer.classList.remove('hidden');
             _vs.classList.remove('hidden');
             _choiceContainer.classList.add('hidden');
-            _vs.innerText = `${playerStart.getPlayerOneName()} (X) vs. ${playerStart.getPlayerTwoName()} (O)`;
+            _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. ${gameControls.getPlayerTwoName()} (O)`;
         }
     }
     
