@@ -101,18 +101,14 @@ const player = (XO, name) => {
     const getXO = () => {
         return XO;
     }
-    const getName = () => {
-        return name;
-    }
     return {
         getXO,
-        getName,
     }
 }
 
 const gameControls = (() => {
-    const _player1 = player('X', playerStart.getPlayerOneName());
-    const _player2 = player('O', playerStart.getPlayerTwoName());
+    const _player1 = player('X');
+    const _player2 = player('O');
 
     var _roundOdd = true;
     var _roundNumber = 0;
@@ -136,8 +132,10 @@ const gameControls = (() => {
             _checkWin();
         }
     }
-    
+
+    var overallRound = false;
     const resetGame = () => {
+        overallRound = !overallRound;
         _winner = '';
         _winStatus = false;
         _roundOdd = true;
@@ -146,15 +144,30 @@ const gameControls = (() => {
             gameboard.setBoard(i, '');
         }
     }
+    const getOverallRound = () => {
+        return overallRound;
+    }
 
     var _winner;
+    const _updateWinner = () => {
+        if (overallRound == false) {
+            if (_roundOdd == true) {
+                _winner = playerStart.getPlayerTwoName();
+            }
+            if (_roundOdd == false) {
+                _winner = playerStart.getPlayerOneName();
+            }
+        }
+        if (overallRound == true) {
+            if (_roundOdd == true) {
+                _winner = playerStart.getPlayerOneName();
+            }
+            if (_roundOdd == false) {
+                _winner = playerStart.getPlayerTwoName();
+            }
+        }
+    }
     const getWinner = () => {
-        if (_roundOdd == true) {
-            _winner = _player2.getName();
-        }
-        if (_roundOdd == false) {
-            _winner = _player1.getName();
-        }
         return _winner;
     }
 
@@ -178,6 +191,7 @@ const gameControls = (() => {
             if (one == two && two == three && one != '' && two != '' && three != '') {
                 _winStatus = true;
                 _winLine = [(_winConditionIndex[i])[0], (_winConditionIndex[i])[1], (_winConditionIndex[i])[2]];
+                _updateWinner();
                 return _winLine;
             }
 
@@ -196,6 +210,7 @@ const gameControls = (() => {
         getRound,
         getWinLine,
         getWinner,
+        getOverallRound,
         resetGame,
     }
 })();
@@ -204,6 +219,7 @@ const display = (() => {
     const _boardSpots = document.querySelectorAll('.boardspot');
     const _boardContainer = document.getElementById('board');
     const _resultContainer = document.getElementById('result');
+    const _vs = document.getElementById('vs')
     
     _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
         gameControls.playTurn(e.target.getAttribute('data-index'));
@@ -241,6 +257,13 @@ const display = (() => {
         _resultContainer.classList.remove('seen');
         _boardContainer.setAttribute('style', 'opacity: initial; filter: initial');
 
+        if (gameControls.getOverallRound() == false) {
+            _vs.innerText = `${playerStart.getPlayerOneName()} (X) vs. ${playerStart.getPlayerTwoName()} (O)`
+        }
+        if (gameControls.getOverallRound() == true) {
+            _vs.innerText = `${playerStart.getPlayerTwoName()} (X) vs. ${playerStart.getPlayerOneName()} (O)`
+        }
+
         for (let i = 0; i < _boardSpots.length; i++) {
             _boardSpots[i].innerText = gameboard.getBoard(i);
             _boardSpots[i].setAttribute('style', 'color: white');
@@ -248,7 +271,6 @@ const display = (() => {
     } 
     
     const _startGame = () => {
-        const _vs = document.getElementById('vs')
         const _choiceContainer = document.getElementById('player-choice')
         if (playerStart.getPlayerOneReady() === true && playerStart.getPlayerTwoReady() === true) {
             _boardContainer.classList.remove('hidden');
