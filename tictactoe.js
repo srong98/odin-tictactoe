@@ -22,7 +22,7 @@ const player = (XO, number) => {
     }
 
     const _playerInput = document.getElementById(`p${number}name`);
-    const _playerLabel = document.getElementById(`p${number}label`)
+    const _playerLabel = document.getElementById(`p${number}label`);
 
     var _playerName = `Player ${number}`;
     _playerInput.addEventListener('change', (e) => {
@@ -32,7 +32,7 @@ const player = (XO, number) => {
                 _playerLabel.innerText = `Player ${number}`; 
                 _playerName = `Player ${number}`;
             }
-        });
+        })
     const getPlayerName = () => {
         return _playerName;
     }
@@ -125,19 +125,25 @@ const gameControls = (() => {
     var _winner;
     const _updateWinner = () => {
         if (_overallRound == false) {
-            if (_roundOdd == true) {
+            if (_roundOdd == true && display.getComputerMode() == false) {
                 _winner = _player2.getPlayerName();
             }
-            if (_roundOdd == false) {
+            else if (_roundOdd == false) {
                 _winner = _player1.getPlayerName();
+            }
+            else  {
+                _winner = 'Computer';
             }
         }
         if (_overallRound == true) {
             if (_roundOdd == true) {
                 _winner = _player1.getPlayerName();
             }
-            if (_roundOdd == false) {
+            else if (_roundOdd == false && display.getComputerMode() == false) {
                 _winner = _player2.getPlayerName();
+            }
+            else {
+                _winner = 'Computer';
             }
         }
     }
@@ -168,7 +174,6 @@ const gameControls = (() => {
                 _updateWinner();
                 return _winLine;
             }
-
         }
     }
     const getWinStatus = () => {
@@ -197,14 +202,14 @@ const display = (() => {
     const _boardSpots = document.querySelectorAll('.boardspot');
     const _boardContainer = document.getElementById('board');
     const _resultContainer = document.getElementById('result');
-    const _vs = document.getElementById('vs')
+    const _vs = document.getElementById('vs');
     
     _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
         gameControls.playTurn(e.target.getAttribute('data-index'));
         e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
         _highlightWinLine();
         setTimeout(_endGameDisplay, 3000);
-    }));
+    }))
 
     const _highlightWinLine = () => {
         if (gameControls.getWinStatus() == true) {
@@ -235,12 +240,19 @@ const display = (() => {
         _resultContainer.classList.remove('seen');
         _boardContainer.setAttribute('style', 'opacity: initial; filter: initial');
 
-        if (gameControls.getOverallRound() == false) {
+        if (gameControls.getOverallRound() == false && display.getComputerMode() == false) {
             _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. ${gameControls.getPlayerTwoName()} (O)`
-        }
-        if (gameControls.getOverallRound() == true) {
+        };
+        if (gameControls.getOverallRound() == true && display.getComputerMode() == false) {
             _vs.innerText = `${gameControls.getPlayerTwoName()} (X) vs. ${gameControls.getPlayerOneName()} (O)`
-        }
+        };
+        if (gameControls.getOverallRound() == false && display.getComputerMode() == true) {
+            _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. Computer (O)`
+        };
+        if (gameControls.getOverallRound() == true && display.getComputerMode() == true) {
+            _vs.innerText = `Computer (X) vs. ${gameControls.getPlayerOneName()} (O)`
+        };
+
 
         for (let i = 0; i < _boardSpots.length; i++) {
             _boardSpots[i].innerText = gameboard.getBoard(i);
@@ -248,21 +260,50 @@ const display = (() => {
         }
     } 
     
-    const _startGame = () => {
-        const _choiceContainer = document.getElementById('player-choice')
-        if (gameControls.getPlayerOneReady() === true && gameControls.getPlayerTwoReady() === true) {
-            _boardContainer.classList.remove('hidden');
-            _vs.classList.remove('hidden');
-            _choiceContainer.classList.add('hidden');
-            _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. ${gameControls.getPlayerTwoName()} (O)`;
-        }
-    }
-    
-    const _startButton = document.getElementById('start');
-    _startButton.addEventListener('click', _startGame)
+    const _vsPlayer = document.getElementById('vsplayer');
+    _vsPlayer.addEventListener('click', () => {
+        _computerMode = false;
+        const _player2OrComputer = document.getElementById('player2-or-comp')
+        const _p2 = document.getElementById('player2');
+        _p2.classList.remove('hidden');
+        _player2OrComputer.classList.add('hidden');
+    })
 
+    var _computerMode = true;
+    const _vsComputer = document.getElementById('vscomputer');
+    _vsComputer.addEventListener('click', () => {       
+        const _compChoice = document.querySelectorAll('.computer');
+        _compChoice.forEach(item => item.classList.remove('hidden'))
+        _vsPlayer.classList.add('hidden');
+        _vsComputer.classList.add('hidden');
+    })
+    const getComputerMode = () => {
+        return _computerMode;
+    }
+
+    const _startGame = () => {
+            const _choiceContainer = document.getElementById('player-choice');
+            if (_computerMode === true && gameControls.getPlayerOneReady() === true) {
+                _boardContainer.classList.remove('hidden');
+                _vs.classList.remove('hidden');
+                _choiceContainer.classList.add('hidden');
+                _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. Computer (O)`;
+            }
+            if (gameControls.getPlayerOneReady() === true && gameControls.getPlayerTwoReady() === true) {
+                _boardContainer.classList.remove('hidden');
+                _vs.classList.remove('hidden');
+                _choiceContainer.classList.add('hidden');
+                _vs.innerText = `${gameControls.getPlayerOneName()} (X) vs. ${gameControls.getPlayerTwoName()} (O)`;
+            }
+        }
+        
+    const _startButton = document.getElementById('start');
+    _startButton.addEventListener('click', _startGame);
 
     return {
-
+        getComputerMode,
     }
+})();
+const computerPlay = (() => {
+    
 })();

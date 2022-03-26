@@ -18,10 +18,20 @@
                 <button id="p1ready" class="not-ready ready-button">Not Ready</button>
             </div>
             <button id="start">Start</button>
-            <div id="player2">
-                <label for="p2name" id="p2label">Player 2</label>
-                <input type="text" id="p2name" maxlength="11" placeholder="name">
-                <button id="p2ready" class="not-ready ready-button">Not Ready</button>
+            <div id="cpu-p2-container">
+                <div id="player2-or-comp">
+                    <button id="vsplayer">vs. Player</button>
+                    <div class="computer hidden">Computer</div>
+                    <button class="computer hidden">Easy</button>
+                    <button class="computer hidden">Hard</button>
+                    <button class="computer hidden">Impossible</button>
+                    <button id="vscomputer">vs. AI</button>
+                </div>
+                <div id="player2" class="hidden">
+                    <label for="p2name" id="p2label">Player 2</label>
+                    <input type="text" id="p2name" maxlength="11" placeholder="name">
+                    <button id="p2ready" class="not-ready ready-button">Not Ready</button>
+                </div>
             </div>
         </div>
         <div id="vs" class="hidden"></div>

@@ -20,6 +20,7 @@ html {
 body {
     background: var(--backround-black);
 }
+div.computer,
 label {
     font-family: Byte256, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 40px;
@@ -29,7 +30,7 @@ input[type="text"] {
     -webkit-appearance: none;
     appearance: none;
     height: 50px;
-    width: min(150px, 70%);
+    width: max(150px, 70%);
     border-radius: 50px;
     color: white;
     background: var(--backround-black);
@@ -47,7 +48,8 @@ input[type="text"]:focus {
 #result,
 #player-choice,
 #player1,
-#player2 {
+#player2,
+#player2-or-comp {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-around;
@@ -69,6 +71,20 @@ input[type="text"]:focus {
     justify-content: center;
     row-gap: 20px;
 }
+#player2-or-comp {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    width: max(200px, 15vw);
+    height: 50vh;
+    border: 5px double var(--gold);
+    border-radius: 50px;
+    justify-content: center;
+    row-gap: 20px;
+}
+button.computer,
+#vsplayer,
+#vscomputer,
 #start,
 .ready-button {
     -webkit-appearance: none;
@@ -78,6 +94,16 @@ input[type="text"]:focus {
     padding: 12px 18px;
     border-radius: 30px;    
     border: 2px white solid;
+}
+#vsplayer,
+#vscomputer {
+    position: absolute;
+}
+#vsplayer {
+    top: 30%;
+}
+#vscomputer {
+    bottom: 30%;
 }
 .ready-button {
     justify-self: flex-end;
@@ -91,7 +117,9 @@ input[type="text"]:focus {
 .ready-button.ready {
     background: var(--green);
 }
-#start,
+#vsplayer:hover,
+#vscomputer:hover,
+#start:hover,
 .ready-button:hover {
     cursor: pointer;
 }
@@ -99,6 +127,15 @@ input[type="text"]:focus {
     width: 120px;
     background: var(--backround-black)
 }
+button.computer,
+#vsplayer,
+#vscomputer {
+    background: var(--backround-black);
+    width: 150px;
+}
+button.computer:active,
+#vsplayer:active,
+#vscomputer:active,
 #start:active {
     background: var(--reverse-black);
 }
