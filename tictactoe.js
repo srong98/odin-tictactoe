@@ -13,6 +13,7 @@ const gameboard = (() => {
     return {
         getBoard,
         setBoard,
+        _board,
     }
 })();
 
@@ -91,19 +92,21 @@ const gameControls = (() => {
     const getRound = () => {
         return _roundNumber;
     }
-    
-    const playTurn = (index) => {
+
+    const playTurn = (index) => {    
         if (gameboard.getBoard(index) == '' && _winStatus == false) {
             if (_roundOdd == true) {
                 gameboard.setBoard(index, _player1.getXO());
-            }
+                }
             if (_roundOdd == false) {
                 gameboard.setBoard(index, _player2.getXO());
-            }
-            _round();
-            _checkWin();
-        }
+                }
+                
+            }        
+        _round();
+        _checkWin();
     }
+    
 
     var _overallRound = false;
     const resetGame = () => {
@@ -182,9 +185,38 @@ const gameControls = (() => {
     const getWinLine = () => {
         return _winLine;
     }
-    
+
+    var _computerIndex;
+    const _getComputerMove = () => {
+        var _legalIndex = [];
+        for (let i = 0; i < 9; i++) {
+            if (gameboard.getBoard(i) == '') {
+                _legalIndex.push('');
+            }
+        }
+       _computerIndex = Math.floor(Math.random() * _legalIndex.length)
+    }
+
+    const playComputerTurn = (index) => {
+        if (_overallRound == false) {
+            gameboard.setBoard(index, _player1.getXO());
+            _getComputerMove();
+            gameboard.setBoard(_computerIndex, _player2.getXO())
+                
+        }
+        if (_overallRound == true) {
+            _getComputerMove();
+            gameboard.setBoard(_computerIndex, _player1.getXO());
+            gameboard.setBoard(index, _player2.getXO());
+            
+        }
+        _round();
+        _checkWin();
+    }
+
     return {
         playTurn,
+        playComputerTurn,
         getWinStatus,
         getRound,
         getWinLine,
@@ -205,8 +237,13 @@ const display = (() => {
     const _vs = document.getElementById('vs');
     
     _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
-        gameControls.playTurn(e.target.getAttribute('data-index'));
-        e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
+        if (display.getComputerMode() == true) {
+            gameControls.playComputerTurn(e.target.getAttribute('data-index'));
+        }
+        if (display.getComputerMode() == false) {
+            gameControls.playTurn(e.target.getAttribute('data-index'));
+            e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
+        }
         _highlightWinLine();
         setTimeout(_endGameDisplay, 3000);
     }))
@@ -303,7 +340,4 @@ const display = (() => {
     return {
         getComputerMode,
     }
-})();
-const computerPlay = (() => {
-    
 })();
