@@ -13,7 +13,6 @@ const gameboard = (() => {
     return {
         getBoard,
         setBoard,
-        _board,
     }
 })();
 
@@ -102,8 +101,10 @@ const gameControls = (() => {
                 gameboard.setBoard(index, _player2.getXO());
                 }
                 
-            }        
-        _round();
+            } 
+        if (display.getComputerMode() == false) {  
+            _round();
+        }
         _checkWin();
     }
     
@@ -114,7 +115,12 @@ const gameControls = (() => {
             _overallRound = !_overallRound;
             _winner = '';
             _winStatus = false;
-            _roundOdd = true;
+            if (display.getComputerMode() == false) {
+                _roundOdd = true;
+            }
+            if (display.getComputerMode() == true) {
+                _roundOdd = !_roundOdd;
+            }
             _roundNumber = 0;
             for (let i = 0; i < 9; i++) {
                 gameboard.setBoard(i, '');
@@ -191,27 +197,24 @@ const gameControls = (() => {
         var _legalIndex = [];
         for (let i = 0; i < 9; i++) {
             if (gameboard.getBoard(i) == '') {
-                _legalIndex.push('');
+                _legalIndex.push(i);
             }
         }
-       _computerIndex = Math.floor(Math.random() * _legalIndex.length)
+       _computerIndex = _legalIndex[Math.floor(Math.random() * _legalIndex.length)]
     }
 
-    const playComputerTurn = (index) => {
+    const playComputerTurn = () => {
+        const _boardSpots = document.querySelectorAll('.boardspot');
         if (_overallRound == false) {
-            gameboard.setBoard(index, _player1.getXO());
             _getComputerMove();
-            gameboard.setBoard(_computerIndex, _player2.getXO())
-                
+            gameboard.setBoard(_computerIndex, `O`);
+            _boardSpots[_computerIndex].innerText = `O`;
         }
         if (_overallRound == true) {
             _getComputerMove();
-            gameboard.setBoard(_computerIndex, _player1.getXO());
-            gameboard.setBoard(index, _player2.getXO());
-            
+            gameboard.setBoard(_computerIndex, `X`);
+            _boardSpots[_computerIndex].innerText = `X`;
         }
-        _round();
-        _checkWin();
     }
 
     return {
@@ -238,7 +241,17 @@ const display = (() => {
     
     _boardSpots.forEach(spot => spot.addEventListener('click', (e) => {
         if (display.getComputerMode() == true) {
-            gameControls.playComputerTurn(e.target.getAttribute('data-index'));
+            if (gameControls.getOverallRound() == true) {
+                gameControls.playComputerTurn();
+                gameControls.playTurn(e.target.getAttribute('data-index'));
+                e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
+            }
+            if (gameControls.getOverallRound() == false) {
+                gameControls.playTurn(e.target.getAttribute('data-index')); 
+                e.target.innerText = gameboard.getBoard(e.target.getAttribute('data-index'));
+                setTimeout(gameControls.playComputerTurn, 1000);
+                
+            }
         }
         if (display.getComputerMode() == false) {
             gameControls.playTurn(e.target.getAttribute('data-index'));
